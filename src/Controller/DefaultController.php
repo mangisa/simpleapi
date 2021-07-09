@@ -13,8 +13,11 @@ class DefaultController extends AbstractController
      */
     public function index(): Response
     {
+        $myMail = $this->getParameter('app.admin_email');
+        
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',
+            'my_mail' => $myMail,
         ]);
     }
 }
