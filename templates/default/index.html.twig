@@ -4,18 +4,141 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .country-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .country-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-    <h1>Hello {{ my_mail }}! ✅</h1>
+<div class="country-wrapper">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/videoclub/src/Controller/DefaultController.php'|file_link(0) }}">src/Controller/DefaultController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/videoclub/templates/default/index.html.twig'|file_link(0) }}">templates/default/index.html.twig</a></code></li>
-    </ul>
+    <h2 class="text-center">Busqueda de paises</h2>
+
+    <div class="row">
+
+        <div class="col col-md-6">
+
+            <label> Busqueda por API pública</label>
+
+            <select class="form-select" id="select_countries_api" aria-label="Countries select" autocomplete="off">
+                <option value="" selected disabled>Seleccione busqueda por API</option>
+                {% for country_name in countries_names %}
+                    <option value="{{ country_name }}">{{ country_name }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        <!-- end .col col-md-6 -->
+
+        <div class="col col-md-6">
+
+            <label> Busqueda por BBDD local</label>
+
+            <select class="form-select" id="select_countries_db" aria-label="Countries select" autocomplete="off">
+                <option value="" selected disabled>Seleccione busqueda por BBDD</option>
+                {% for country_name in countries_names %}
+                    <option value="{{ country_name }}">{{ country_name }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        <!-- end .col col-md-6 -->
+
+    </div>
+    <!-- end .row -->
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <label> Pais Buscado </label>
+            <input type="text" class="form-control" id="countryName" aria-describedby="Name">
+        </div>
+        <!-- end .col col-md-6 -->
+
+        <div class="col-md-6">
+            <label> Capital </label>
+            <input type="text" class="form-control" id="countryCapital" aria-describedby="Capital">
+        </div>
+        <!-- end .col col-md-6 -->
+
+        <div class="col-md-6">
+            <label> Population </label>
+            <input type="text" class="form-control" id="countryPopulation" aria-describedby="Population">
+        </div>
+        <!-- end .col col-md-6 -->
+
+        <div class="col-md-6">
+            <label> Region </label>
+            <input type="text" class="form-control" id="countryRegion" aria-describedby="Region">
+        </div>
+        <!-- end .col col-md-6 -->
+
+        <div class="col-md-6">
+            <label> Gini </label>
+            <input type="text" class="form-control" id="countryGini" aria-describedby="Gini">
+        </div>
+        <!-- end .col col-md-6 -->
+        
+    </div>
+    <!-- end .row -->
+    
 </div>
+<!-- end .country-wrapper -->
+
+<script>
+
+    $( document ).ready(function() {
+        $( "#select_countries_api" ).change(function() {
+            if ($( "#select_countries_api" ).val()) {
+                $( "#select_countries_db" ).val('');
+                getCountryByApi();
+            }
+        });
+
+        $( "#select_countries_db" ).change(function() {
+            $( "#select_countries_api" ).val('');
+            if ($( "#select_countries_db" ).val()) {
+                getCountryByDB();
+            }
+        });
+    });
+
+    function getCountryByApi()
+    {
+        $.ajax({
+            type: "GET",
+            url: "{{ path('country_api_get', { 'country': '__country__'  }) }}".replace('__country__', $( "#select_countries_api" ).val()),
+        })
+        .done(function(response) {
+
+            const name = (response.data["name"])?response.data["name"]:'Sin nombre asignado';
+            const capital = (response.data["capital"])?response.data["capital"]:'Sin capital asignada';
+            const population = (response.data["population"])?response.data["population"]:'Sin poblacion asignado';
+            const region = (response.data["region"])?response.data["region"]:'Sin región asignada';
+            const gini = (response.data["gini"])?response.data["gini"]:'Sin región asignada';
+
+            $('#countryName').val(name);
+            $('#countryCapital').val(capital);
+            $('#countryPopulation').val(population);
+            $('#countryRegion').val(region);
+            $('#countryGini').val(gini);
+        })
+        .fail(function(response) {
+            console.log('Fail response getCountryApi');
+        });
+    }
+
+    function getCountryByDB()
+    {
+        $.ajax({
+            type: "GET",
+            url: "{{ path('country_db_get', { 'country': '__country__'  }) }}".replace('__country__', $( "#select_countries_api" ).val()),
+        })
+        .done(function(response) {
+            console.log('Correct response getCountry');
+        })
+        .fail(function(response) {
+            console.log('Fail response getCountry');
+        });
+    }
+
+</script>
 {% endblock %}
