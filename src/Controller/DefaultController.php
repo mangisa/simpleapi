@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
+use App\Repository\CountryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,52 +14,52 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="main")
      */
-    public function index(): Response
+    public function index(CountryRepository $countryRepository): Response
     {
-        $data = json_decode(file_get_contents('https://restcountries.eu/rest/v2/all?fields=name'), true);
-        
-        $countryNames = array();
-        foreach ($data as $key => $arrayCountry) {
-            array_push($countryNames, $arrayCountry['name']);
-        }
-
-        return $this->render('default/index.html.twig', [
-            'my_mail' => $this->getParameter('app.admin_email'),
-            'countries_names' => $countryNames,
-        ]);
+        return $this->render('default/index.html.twig');
     }
 
     /**
-     * @Route("/api_get/{country}", name="country_api_get", methods={"GET"})
+     * @Route("/names_db_get", name="names_db_get", methods={"GET"})
      */
-    public function countryApiGet($country): JsonResponse
+    public function namesDBGet(CountryRepository $countryRepository): JsonResponse
     {
-        $url = 'https://restcountries.eu/rest/v2/name/' . $country;
-        $data = json_decode(file_get_contents($url), true);
-
-        return new JsonResponse(
-            array(
-                'data' => reset($data),
-                'country' => $country,
-            ), 200
-        );
+        return new JsonResponse($countryRepository->findByNameId(), 200);
     }
-
-    /**
-     * @Route("/db_get/{country}", name="country_db_get", methods={"GET"})
-     */
-    public function countryDBGet($country): JsonResponse
-    {
-        $url = 'https://restcountries.eu/rest/v2/name/' . $country;
-        $data = json_decode(file_get_contents($url), true);
-
-        return new JsonResponse(
-            array(
-                'data' => reset($data),
-                'country' => $country,
-            ), 200
-        );
-    }
-
     
+    /**
+     * @Route("/db_get/{id}", name="country_db_get", methods={"GET"})
+     */
+    public function countryDBGet(Country $country): JsonResponse
+    {
+        return new JsonResponse($country->getJson(), 200);
+    }
+
+    /**
+     * @Route("/create_countries", name="create_countries", methods={"GET"})
+     */
+    public function createCountries(): JsonResponse
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $dataCountries = json_decode(file_get_contents('https://restcountries.eu/rest/v2/all'), true);
+        
+        foreach ($dataCountries as $dataCountry) {
+
+            $countryData = array($dataCountry);
+            $countryName = $dataCountry['name'];
+ 
+            $country = new Country();
+
+            $country->setName($countryName);
+            $country->setJson($countryData);
+            $entityManager->persist($country);
+            $entityManager->flush();
+        }        
+
+        return new JsonResponse(
+            array(
+                'correct_create' => true,
+            ), 200
+        );
+    }   
 }

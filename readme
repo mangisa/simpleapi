@@ -1,0 +1,5 @@
+Prarametros para la bbdd
+    En la raiz del proyecto en el archivo .env.local
+        Cambia 'db_user' por tu nombre de usaurio en mysql
+        Cambia 'db_password' por tu passwor de mysql
+        Cambia 'db_name' por el nombre que le quieras poner a la bbdd (IMPORTANTE: no hace falta que generes la bbdd ya se ocupa doctrine)
