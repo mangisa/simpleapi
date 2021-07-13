@@ -1,5 +1,35 @@
 Prarametros para la bbdd
-    En la raiz del proyecto en el archivo .env.local
+    En la raiz del proyecto en el archivo .env.local descomenta la linea 2
         Cambia 'db_user' por tu nombre de usaurio en mysql
         Cambia 'db_password' por tu passwor de mysql
         Cambia 'db_name' por el nombre que le quieras poner a la bbdd (IMPORTANTE: no hace falta que generes la bbdd ya se ocupa doctrine)
+        Cambia 'server_version' por tu version del servidor MariaDB
+
+Crear la bbdd:
+    Desde consola de comandos en la raiz del proyecto y ejecuta el siguiente comando:
+        php bin/console doctrine:database:create
+
+creaar las tablas de bbdd:
+    Desde consola de comandos en la raiz del proyecto y ejecuta el siguiente comando:
+        php bin/console doctrine:migrations:migrate
+
+Abrir servidor:
+    Desde consola de comandos en la raiz del proyecto y ejecuta el siguiente comando:
+        symfony server:start -d
+
+Cerrar servidor
+    Desde consola de comandos en la raiz del proyecto y ejecuta el siguiente comando:
+        symfony server:stop
+
+Abrir proyecto local por defecto estará en http://127.0.0.1:8000/ aunque puede asignarle otro puerto si tienes otros proyectos en funcionamiento
+    Desde consola de comandos en la raiz del proyecto y ejecuta el siguiente comando:
+        symfony open:local
+
+Cargar los valores en la tabla country
+    Al cargarse la aplicación hay un boton que pone 'Generate DDBB values', pulsalo y hará la función para cargar los valores desde la api de restcountries, ha de estar vacia la tabla
+
+Toda la lógica esta en src/Controller/DefaultControler
+
+La vista esta en templates/default/index.html.twig 
+
+La consultas a bbdd estan en src/Repository/CountryRepository

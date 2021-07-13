@@ -36,6 +36,13 @@
 
         </div>
         <!-- end .col col-md-4 -->
+
+        {% if dateAlreadyCreates != true %}
+            <div class="col col-md-2">
+                <button id="generate_values_button" class="btn btn-primary">{{ dateAlreadyCreates }}  Generate DDBB values</button>
+            </div>
+            <!-- end .col col-md-2 -->
+        {% endif %}
        
     </div>
     <!-- end .row -->
@@ -157,38 +164,14 @@
         <!-- end .col col-md-3 -->
 
         <div class="col-md-3">
-            <label> Currencies </label>
-            <select class="form-select" id="countryCurrencies" aria-label="Currencies select" autocomplete="off"></select>
-        </div>
-        <!-- end .col col-md-3 -->
-
-        <div class="col-md-3">
-            <label> Languages </label>
-            <select class="form-select" id="countryLanguages" aria-label="Languages select" autocomplete="off"></select>
-        </div>
-        <!-- end .col col-md-3 -->
-
-        <div class="col-md-3">
             <label> Translations </label>
             <select class="form-select" id="countryTranslations" aria-label="Translations select" autocomplete="off"></select>
         </div>
         <!-- end .col col-md-3 -->
 
         <div class="col-md-3">
-            <label> RegionalBlocs </label>
-            <select class="form-select" id="countryRegionalBlocs" aria-label="RegionalBlocs select" autocomplete="off"></select>
-        </div>
-        <!-- end .col col-md-3 -->
-
-        <div class="col-md-3">
             <label> Cioc </label>
             <input type="text" class="form-control" id="countryCioc" aria-describedby="Cioc" autocomplete="off">
-        </div>
-        <!-- end .col col-md-3 -->
-
-        <div class="col-md-3">
-            <label> Flag </label>
-            <input type="text" class="form-control" id="countryFlag" aria-describedby="Flag" autocomplete="off">
         </div>
         <!-- end .col col-md-3 -->
         
@@ -225,9 +208,12 @@
                 initialApiDates();
             }
         });
+
+        $( "#generate_values_button" ).click(function() {
+            createCountries();
+        });
         
     });
-
     function initialApiDates()
     {
         xhttp.open('GET', 'https://restcountries.eu/rest/v2/all?fields=name', true);
@@ -305,6 +291,27 @@
         }
     }
 
+    function createCountries()
+    {
+        xhttp.open('GET', "{{ path('create_countries') }}" , true);
+
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+                
+                let dates = JSON.parse(this.responseText);
+
+                if (dates.created) {
+                    location.reload();
+                } else {
+                    alert( dates.message );
+                }
+            }
+        }
+    }
+
     function fillInputs(response_dates)
     {
         for (let dato of response_dates) {
@@ -334,13 +341,9 @@
             $('#countryNativeName').val(dato.nativeName);
             $('#countryNumericCode').val(dato.numericCode);
             $('#countryCioc').val(dato.cioc);
-            $('#countryFlag').val(dato.flag);
 
             let translations = Object.entries(dato.translations);
             for (let dat of translations) $('#countryTranslations').append($('<option>').text(dat[0] + ': ' + dat[1]).attr('value', dat[0]));
-            //currencies
-            //languages select piker
-            //regionalBlocs select
         }
     }
 
@@ -359,7 +362,6 @@
         $('#countryNativeName').val('');
         $('#countryNumericCode').val('');
         $('#countryCioc').val('');
-        $('#countryFlag').val('');
         $("#countryTopLevelDomain").empty();
         $("#countryCallingCodes").empty();
         $("#countryAltSpellings").empty();
