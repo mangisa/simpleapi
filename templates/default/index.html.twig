@@ -47,12 +47,6 @@
     </div>
     <!-- end .row -->
 
-    <hr>
-
-    <div class="row">
-
-    </div>
-    <!-- end .row -->
     <div class="row">
 
         <div class="col-md-3">
@@ -214,6 +208,7 @@
         });
         
     });
+
     function initialApiDates()
     {
         xhttp.open('GET', 'https://restcountries.eu/rest/v2/all?fields=name', true);
@@ -232,8 +227,7 @@
                     $('#select_countries').append($('<option>').text(date.name).attr('value', date.name));
                 } 
             }
-        }
-        
+        }  
     }
 
     function initialDBDates()
