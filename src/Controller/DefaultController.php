@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Country;
 use App\Repository\CountryRepository;
+use App\Service\CountryManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,11 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="main")
      */
-    public function index(CountryRepository $countryRepository): Response
+    public function index(): Response
     {
         return $this->render('default/index.html.twig', array(
-            'dateAlreadyCreates' => $this->dateAlreadyCreates($countryRepository),
+            'url_contry'        => $this->getParameter('app.url_country'),
+            'url_all_countries' => $this->getParameter('app.url_all_countries'),
         ));
     }
 
@@ -40,45 +42,15 @@ class DefaultController extends AbstractController
     /**
      * @Route("/create_countries", name="create_countries", methods={"GET"})
      */
-    public function createCountries(CountryRepository $countryRepository): JsonResponse
+    public function createCountries(CountryManager $countryManager): JsonResponse
     {
-        if ($this->dateAlreadyCreates($countryRepository)) {
-            return new JsonResponse(
-                array(
-                    'created' => false,
-                    'message' => 'Debe tener vacía la tabla country para poder importar datos por api',
-                ), 200
-            );
-        } 
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $dataCountries = json_decode(file_get_contents('https://restcountries.eu/rest/v2/all'), true);
+        $createCountries = $countryManager->generateCountries($this->getParameter('app.url_all_countries'));
         
-        foreach ($dataCountries as $dataCountry) { 
-            $country = new Country();
-
-            $country->setName($dataCountry['name']);
-            $country->setJson(array($dataCountry));
-            $entityManager->persist($country);
-            $entityManager->flush();
-        }        
-
         return new JsonResponse(
             array(
-                'created' => true,
-                'message' => 'Se han creado los elementos en bbdd',
+                'created' => $createCountries['created'],
+                'message' => $createCountries['message'],
             ), 200
         );
     } 
-    
-    private function dateAlreadyCreates($countryRepository)
-    {
-        $numberCountries = $countryRepository->countCountry();
-
-        if ($numberCountries) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

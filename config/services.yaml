@@ -8,6 +8,9 @@ parameters:
     # the parameter name is an arbitrary string (the 'app.' prefix is recommended
     # to better differentiate your parameters from Symfony parameters).
     app.admin_email: 'menxisa@gmail.com'
+    app.url_all_countries: 'https://restcountries.eu/rest/v2/all'
+    # replace __name_country__ by name country to search
+    app.url_country: 'https://restcountries.eu/rest/v2/name/__name_country__' 
 
 services:
     # default configuration for services in *this* file
