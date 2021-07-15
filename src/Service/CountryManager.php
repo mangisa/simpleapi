@@ -40,7 +40,7 @@ class CountryManager
     }
 
     /**
-     * Generate al countries in ddbb y public API
+     * Generate all countries in ddbb by public API
      */
     public function generateCountries($url)
     {

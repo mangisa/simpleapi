@@ -1,0 +1,388 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DefaultController!{% endblock %}
+
+{% block body %}
+<style>
+    .country-wrapper { margin: 1em auto; max-width: 80%; width: 95%; font: 18px/1.5 sans-serif; }
+    .country-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div id="main" class="country-wrapper">
+
+    <h2 class="text-center"> Busqueda de paises </h2>
+
+    <div class="row">
+
+        <div class="col col-md-4 offset-md-2">
+
+            <label> Type search </label>
+
+            <select class="form-select" id="select_type_search" aria-label="Countries select" autocomplete="off">
+                <option value="api" selected> Search by API </option>
+                <option value="ddbb"> Search by BBDD </option>
+            </select>
+
+        </div>
+        <!-- end .col col-md-4 offset-md-2 -->
+
+        <div class="col col-md-4">
+
+            <label> Search Country </label>
+
+            <select class="form-select" id="select_countries" aria-label="Countries select" autocomplete="off">
+                
+            </select>
+
+        </div>
+        <!-- end .col col-md-4 -->
+
+        {% if countryManager.countriesAlreadyCreates() != 'true' %}
+            <div class="col col-md-2">
+                <button id="generate_values_button" class="btn btn-primary"> Generate DDBB values </button>
+            </div>
+            <!-- end .col col-md-2 -->
+        {% else %}
+            <div class="col col-md-2">
+                <button id="prova_button" class="btn btn-danger"> Already generate in DDBB </button>
+            </div>
+            <!-- end .col col-md-2 -->
+        {% endif %}
+       
+    </div>
+    <!-- end .row -->
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <label> Country </label>
+            <input type="text" class="form-control" id="countryName" aria-describedby="Name" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> topLevelDomain </label>
+            <select class="form-select" id="countryTopLevelDomain" aria-label="Countries select" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Alpha2Code </label>
+            <input type="text" class="form-control" id="countryAlpha2Code" aria-describedby="Alpha3Code" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> alpha3Code </label>
+            <input type="text" class="form-control" id="countryAlpha3Code" aria-describedby="alpha3Code" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> CallingCodes </label>
+            <select class="form-select" id="countryCallingCodes" aria-label="CallingCodes select" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Capital </label>
+            <input type="text" class="form-control" id="countryCapital" aria-describedby="Capital" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> AltSpellings </label>
+            <select class="form-select" id="countryAltSpellings" aria-label="AltSpellings select" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Region </label>
+            <input type="text" class="form-control" id="countryRegion" aria-describedby="Region" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Subregion </label>
+            <input type="text" class="form-control" id="countrySubregion" aria-describedby="Subregion" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Population </label>
+            <input type="text" class="form-control" id="countryPopulation" aria-describedby="Population" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Latlng </label>
+            <select class="form-select" id="countryLatlng" aria-label="Latlng select" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Demonym </label>
+            <input type="text" class="form-control" id="countryDemonym" aria-describedby="Demonym" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Area </label>
+            <input type="text" class="form-control" id="countryArea" aria-describedby="Area" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Gini </label>
+            <input type="text" class="form-control" id="countryGini" aria-describedby="Gini" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Timezones </label>
+            <select class="form-select" id="countryTimezones" aria-label="Timezones select" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Borders </label>
+            <select class="form-select" id="countryBorders" aria-label="Borders select" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> NativeName </label>
+            <input type="text" class="form-control" id="countryNativeName" aria-describedby="NativeName" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> NumericCode </label>
+            <input type="text" class="form-control" id="countryNumericCode" aria-describedby="NumericCode" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Translations </label>
+            <select class="form-select" id="countryTranslations" aria-label="Translations select" autocomplete="off"></select>
+        </div>
+        <!-- end .col col-md-3 -->
+
+        <div class="col-md-3">
+            <label> Cioc </label>
+            <input type="text" class="form-control" id="countryCioc" aria-describedby="Cioc" autocomplete="off">
+        </div>
+        <!-- end .col col-md-3 -->
+        
+    </div>
+    <!-- end .row -->
+    
+</div>
+<!-- end .country-wrapper -->
+
+<script>
+
+    const url_contry = `{{ url_contry }}`;
+    const url_all_countries = `{{ url_all_countries }}`;
+    const xhttp = new XMLHttpRequest();
+
+    $( document ).ready(function() {
+        
+        initialApiDates();
+
+        document.querySelector('#select_type_search').addEventListener('change', function() {
+            $('#select_countries').empty();
+            
+            if ($( "#select_type_search" ).val() == 'ddbb') {
+                initialDBDates();
+            } else {
+                initialApiDates();
+            }
+        })
+
+        document.querySelector('#select_countries').addEventListener('change', function() {
+            clearInputs();
+
+            if ($( "#select_type_search" ).val() == 'ddbb') {
+                getCountryByDB();
+            } else {
+                getCountryByApi();
+            }
+        })
+
+        "{% if countryManager.countriesAlreadyCreates() != 'true' %}"
+            document.querySelector("#generate_values_button").addEventListener('click', function() { 
+                createCountries(); 
+            });
+        "{% else %}"
+            document.querySelector("#prova_button").addEventListener('click', function() { 
+                prova(); 
+            });
+        "{% endif %}"
+    });
+
+    function prova()
+    {
+        console.log('pulse hola');
+    }
+
+    function initialApiDates()
+    {
+        xhttp.open('GET', url_all_countries, true);
+
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                $('#select_countries').append($('<option selected disabled>').text('Choose option').attr('value', ''));
+                
+                let dates = JSON.parse(this.responseText);
+
+                for (let date of dates) {
+                    $('#select_countries').append($('<option>').text(date.name).attr('value', date.name));
+                } 
+            }
+        }  
+    }
+
+    function initialDBDates()
+    {
+        xhttp.open('GET', "{{ path('names_db_get') }}" , true);
+
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                $('#select_countries').append($('<option selected disabled>').text('Choose option').attr('value', ''));
+                
+                let dates = JSON.parse(this.responseText);
+
+                for (let date of dates) {
+                    $('#select_countries').append($('<option>').text(date.name).attr('value', date.id))
+                } 
+            }
+        }
+    }
+    
+    function getCountryByDB()
+    {
+        xhttp.open('GET', "{{ path('country_db_get', { 'id': '__id_country__'  }) }}".replace('__id_country__', $( "#select_countries" ).val()) , true);
+
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+                
+                let db_dates = JSON.parse(this.responseText);
+                fillInputs(db_dates);
+                
+            }
+        }
+    }
+
+    function getCountryByApi()
+    {
+        let url = url_contry.replace('__name_country__', $( "#select_countries" ).val());
+
+        xhttp.open('GET', url, true);
+
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+            
+            if (this.readyState == 4 && this.status == 200) {
+                
+                let api_dates = JSON.parse(this.responseText);
+                fillInputs(api_dates);
+                
+            }
+        }
+    }
+
+    function createCountries()
+    {
+        xhttp.open('GET', "{{ path('create_countries') }}" , true);
+
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+                
+                let dates = JSON.parse(this.responseText);
+
+                if (dates.created) {
+                    location.reload();
+                } else {
+                    alert( dates.message );
+                }
+            }
+        }
+    }
+
+    function fillInputs(response_dates)
+    {
+        for (let dato of response_dates) {
+
+            for (let dat of dato.topLevelDomain) $('#countryTopLevelDomain').append($('<option>').text(dat).attr('value', dat));
+
+            for (let dat of dato.callingCodes) $('#countryCallingCodes').append($('<option>').text(dat).attr('value', dat));
+
+            for (let dat of dato.altSpellings) $('#countryAltSpellings').append($('<option>').text(dat).attr('value', dat));
+
+            for (let dat of dato.latlng) $('#countryLatlng').append($('<option>').text(dat).attr('value', dat));
+
+            for (let dat of dato.timezones) $('#countryTimezones').append($('<option>').text(dat).attr('value', dat));
+
+            for (let dat of dato.borders) $('#countryBorders').append($('<option>').text(dat).attr('value', dat));
+
+            $('#countryName').val(dato.name);
+            $('#countryAlpha2Code').val(dato.alpha2Code);
+            $('#countryAlpha3Code').val(dato.alpha3Code);
+            $('#countryCapital').val(dato.capital);
+            $('#countryRegion').val(dato.region);
+            $('#countrySubregion').val(dato.subregion);
+            $('#countryPopulation').val(dato.population);
+            $('#countryDemonym').val(dato.demonym);
+            $('#countryArea').val(dato.area);
+            $('#countryGini').val(dato.gini);
+            $('#countryNativeName').val(dato.nativeName);
+            $('#countryNumericCode').val(dato.numericCode);
+            $('#countryCioc').val(dato.cioc);
+
+            let translations = Object.entries(dato.translations);
+            for (let dat of translations) $('#countryTranslations').append($('<option>').text(dat[0] + ': ' + dat[1]).attr('value', dat[0]));
+        }
+    }
+
+    function clearInputs()
+    {
+        $('#countryName').val('');
+        $('#countryAlpha2Code').val('');
+        $('#countryAlpha3Code').val('');
+        $('#countryCapital').val('');
+        $('#countryRegion').val('');
+        $('#countrySubregion').val('');
+        $('#countryPopulation').val('');
+        $('#countryDemonym').val('');
+        $('#countryArea').val('');
+        $('#countryGini').val('');
+        $('#countryNativeName').val('');
+        $('#countryNumericCode').val('');
+        $('#countryCioc').val('');
+        $("#countryTopLevelDomain").empty();
+        $("#countryCallingCodes").empty();
+        $("#countryAltSpellings").empty();
+        $("#countryLatlng").empty();
+        $("#countryTimezones").empty();
+        $("#countryBorders").empty();
+        $("#countryTranslations").empty();
+    }
+
+</script>
+{% endblock %}
