@@ -4,7 +4,11 @@ namespace App\Service;
 
 use App\Entity\Country;
 use App\Repository\CountryRepository;
+use Doctrine\DBAL\Types\ArrayType;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use Symfony\Component\BrowserKit\Response;
 
 class CountryManager
 {
@@ -22,7 +26,7 @@ class CountryManager
     /**
      *  return int with the number of countries
      */
-    public function getNumberCountries()
+    public function getNumberCountries(): int
     {
         return $this->countryRepository->countCountry();
     }
@@ -30,7 +34,7 @@ class CountryManager
     /**
      *  return bool with if there is data in ddbb
      */
-    public function countriesAlreadyCreates()
+    public function countriesAlreadyCreates(): bool
     {
         if ($this->getNumberCountries()) {
             return true;
@@ -42,7 +46,7 @@ class CountryManager
     /**
      * Generate all countries in ddbb by public API
      */
-    public function generateCountries($url)
+    public function generateCountries($url): array
     {
         if (true === $this->countriesAlreadyCreates()) {
             return array(

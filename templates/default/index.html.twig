@@ -30,45 +30,75 @@
         <div class="row">
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryName" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Name</label>
+                <label for="disabled"> Name </label>
             </div>
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryAlpha2Code" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Alpha2Code</label>
+                <label for="disabled"> Alpha2Code </label>
             </div>
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryAlpha3Code" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Alpha3Code</label>
+                <label for="disabled"> Alpha3Code </label>
             </div>
         </div>
 
         <div class="row">
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryCapital" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Capital</label>
+                <label for="disabled"> Capital </label>
             </div>
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryRegion" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Region</label>
+                <label for="disabled"> Region </label>
             </div>
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countrySubregion" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Subregion</label>
+                <label for="disabled"> Subregion </label>
             </div>
         </div>
         
         <div class="row">
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryPopulation" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Population</label>
+                <label for="disabled"> Population </label>
             </div>
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryDemonym" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Demonym</label>
+                <label for="disabled"> Demonym </label>
             </div>
             <div class="input-field col s4">
                 <input disabled placeholder="Placeholder" id="countryArea" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Area</label>
+                <label for="disabled"> Area </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s4">
+                <select id="countryTopLevelDomain" class="form_select" autocomplete="off"></select>
+                <label> TopLevelDomain </label>
+            </div>
+            <div class="input-field col s4">
+                <select id="countryAltSpellings" class="form_select" autocomplete="off"></select>
+                <label> AltSpellings </label>
+            </div>
+            <div class="input-field col s4">
+                <select id="countryBorders" class="form_select" autocomplete="off"></select>
+                <label> Borders </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s4">
+                <select id="countryTimezones" class="form_select" autocomplete="off"></select>
+                <label> Timezones </label>
+            </div>
+            <div class="input-field col s4">
+                <select id="countryLatlng" class="form_select" autocomplete="off"></select>
+                <label> Latlng </label>
+            </div>
+            <div class="input-field col s4">
+                <select id="countryCallingCodes" class="form_select" autocomplete="off"></select>
+                <label> CallingCodes </label>
             </div>
         </div>
 
@@ -79,15 +109,15 @@
             </div>
             <div class="input-field col s3">
                 <input disabled placeholder="Placeholder" id="countryNativeName" type="text" class="validate" autocomplete="off">
-                <label for="disabled">NativeName</label>
+                <label for="disabled"> NativeName </label>
             </div>
             <div class="input-field col s3">
                 <input disabled placeholder="Placeholder" id="countryNumericCode" type="text" class="validate" autocomplete="off">
-                <label for="disabled">NumericCode</label>
+                <label for="disabled"> NumericCode </label>
             </div>
             <div class="input-field col s3">
                 <input disabled placeholder="Placeholder" id="countryCioc" type="text" class="validate" autocomplete="off">
-                <label for="disabled">Cioc</label>
+                <label for="disabled"> Cioc </label>
             </div>
         </div>
 
@@ -116,6 +146,8 @@
             });
 
             document.querySelector('#select_countries').addEventListener('change', function() {
+                clearInputs();
+
                 if ($( "#select_type_search" ).val() == 'ddbb') {
                     getCountryByDB();
                 } else {
@@ -210,7 +242,6 @@
         function fillData(response_dates)
         {
             for (let response_dat of response_dates) {
-
                 $('#countryName').val(response_dat.name);
                 $('#countryAlpha2Code').val(response_dat.alpha2Code);
                 $('#countryAlpha3Code').val(response_dat.alpha3Code);
@@ -224,7 +255,48 @@
                 $('#countryNativeName').val(response_dat.nativeName);
                 $('#countryNumericCode').val(response_dat.numericCode);
                 $('#countryCioc').val(response_dat.cioc);
+                
+                for (let dat of response_dat.topLevelDomain) $('#countryTopLevelDomain').append($('<option>').text(dat).attr('value', dat));
+
+                for (let dat of response_dat.callingCodes) $('#countryCallingCodes').append($('<option>').text(dat).attr('value', dat));
+
+                for (let dat of response_dat.altSpellings) $('#countryAltSpellings').append($('<option>').text(dat).attr('value', dat));
+
+                for (let dat of response_dat.latlng) $('#countryLatlng').append($('<option>').text(dat).attr('value', dat));
+
+                for (let dat of response_dat.timezones) $('#countryTimezones').append($('<option>').text(dat).attr('value', dat));
+                
+                for (let dat of response_dat.borders) $('#countryBorders').append($('<option>').text(dat).attr('value', dat));
+                
+                $('.form_select').formSelect();
             }
+        }
+
+        function clearInputs()
+        {
+            $('#countryName').val('');
+            $('#countryAlpha2Code').val('');
+            $('#countryAlpha3Code').val('');
+            $('#countryCapital').val('');
+            $('#countryRegion').val('');
+            $('#countrySubregion').val('');
+            $('#countryPopulation').val('');
+            $('#countryDemonym').val('');
+            $('#countryArea').val('');
+            $('#countryGini').val('');
+            $('#countryNativeName').val('');
+            $('#countryNumericCode').val('');
+            $('#countryCioc').val('');
+            
+            $("#countryTopLevelDomain").empty();
+            $("#countryCallingCodes").empty();
+            $("#countryAltSpellings").empty();
+            $("#countryLatlng").empty();
+            $("#countryTimezones").empty();
+            $("#countryBorders").empty();
+            $("#countryTranslations").empty();
+
+            $('.form_select').formSelect();
         }
 
         function createCountries()
